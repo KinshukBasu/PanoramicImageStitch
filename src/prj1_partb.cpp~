@@ -1,0 +1,54 @@
+#include <iostream>
+#include "ifs.h"
+#include "flip.h"
+
+using namespace std;
+
+int main()
+{
+	IFSIMG img1, img2;
+	int temp;
+	int * len;
+	int mask[3][3] = {{1,1,1},{1,2,1},{1,1,1}};
+
+	img1 = ifspin((char *) "synth.ifs");
+
+	
+	len = ifssiz(img1);
+    int max_col = len[1];
+    int max_row = len[2];
+
+	img2 = ifscreate((char *) "u8bit", len, IFS_CR_ALL, 0);
+
+	for(int row=1;row<(max_row-1);row++)
+	{
+		for(int col=1;col<(max_col-1);col++)
+		{
+			temp=0;
+			for(int i=0;i<3;i++)
+			{
+				for(int j=0;j<3;j++)
+				{
+					temp+= ifsfgp(img1,(row-1+i),(col-1+i))*mask[i][j];
+				}
+			}
+			ifsfpp(img2,row,col,temp);
+		}
+	}
+
+	ifspot(img2, (char *)"blur1.ifs");
+
+	//img1=img2;
+	for(int row=0;row<max_row;row++)
+	{
+		for(int col=0;col<max_col;col++)
+		{
+			temp = ifsfgp(img2,row,col) + 3*gaussrand();
+			ifsfpp(img2,row,col,temp);
+		}
+	}
+
+	ifspot(img2, (char *)"blur1.v1.ifs");	
+
+	return(0);
+}

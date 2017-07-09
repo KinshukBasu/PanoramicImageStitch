@@ -1,0 +1,47 @@
+#include<iostream>
+#include<ifs.h>
+#include<flip.h>
+
+using namespace std;
+
+int main()
+{
+	IFSIMG img1;
+	int len[3];
+	int row_size, col_size;
+	
+	row_size=col_size=64;
+
+
+
+	len[0] =2;
+	len[1] = row_size;
+	len[2] = col_size;
+
+	img1 = ifscreate("u8bit",len, IFS_CR_ALL,0);
+
+	for(int row=0;row<row_size;row++)
+	{
+		for(int col=0;col<col_size;col++)
+		{
+			if(row<border||col<border||row>(row_size-border-1)||col>(col_size-border-1)
+			{
+				ifsfpp(img1,row,col,10);
+			}
+			else if(row<(row_size/2)&&col<(col_size/2))
+				ifsfpp(img1, row, col, 100);
+			else if(row>=(row_size/2)&&col<(col_size/2))
+				ifsfpp(img1, row, col, 50);
+			else if(row<(row_size/2)&&col>=(col_size/2))
+				ifsfpp(img1, row, col, 150);
+			else						//Should I put an else if over here?
+				ifsfpp(img1, row, col, 20);
+		}
+	}
+
+	ifspot(img1, (char *)"synth.ifs");
+
+	return(0);
+}
+		
+
